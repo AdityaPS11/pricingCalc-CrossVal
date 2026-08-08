@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  documents Document[]
+}
+
+enum DocumentStatus {
+  draft
+  finalized
+}
+
+model Document {
+  id           String         @id @default(cuid())
+  title        String
+  customer     String
+  issueDate    DateTime
+  status       DocumentStatus @default(draft)
+  finalizedAt  DateTime?
+  finalizedBy  String?
+  updatedAt    DateTime       @updatedAt
+  createdAt    DateTime       @default(now())
+
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  lineItems    LineItem[]
+
+  @@index([userId, issueDate])
+}
+
+enum DiscountType {
+  none
+  percent
+  fixed
+}
+
+model LineItem {
+  id            String       @id @default(cuid())
+  description   String
+  quantity      Int
+  unitPriceCents Int         // stored in cents to avoid float drift
+  discountType  DiscountType @default(none)
+  discountValue Int          @default(0) // cents if fixed, basis points (0-10000) if percent
+  taxPercent    Int          @default(0) // basis points (0-10000), e.g. 500 = 5.00%
+
+  documentId    String
+  document      Document     @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
