@@ -787,3 +787,60 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* ---------- Landing page ---------- */
+
+.landing-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(201, 162, 39, 0.07), transparent 45%),
+    var(--color-bg);
+}
+
+.landing-content {
+  max-width: 620px;
+  text-align: center;
+}
+
+.landing-title {
+  font-size: 38px;
+  line-height: 1.2;
+  margin: 14px 0 18px 0;
+}
+
+.landing-sub {
+  font-size: 16px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.landing-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 56px;
+}
+
+.landing-features {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  text-align: left;
+}
+
+.landing-feature {
+  flex: 1;
+  max-width: 220px;
+}
+
+.landing-feature p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 10px;
+  line-height: 1.5;
+}
