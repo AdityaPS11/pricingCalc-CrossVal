@@ -2,8 +2,8 @@
 
 A small web app for creating documents (quotes/invoices) with line items, per-line discounts and tax, computed totals, a draft/finalized lifecycle, and a summary report.
 
-**Live URL:** _[fill in after deploying]_
-**Repo:** _[fill in your GitHub URL]_
+**Live URL:** https://multi-pricingcalc.vercel.app
+**Repo:** https://github.com/AdityaPS11/pricingCalc-CrossVal
 
 ---
 
