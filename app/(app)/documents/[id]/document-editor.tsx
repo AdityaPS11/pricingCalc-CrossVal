@@ -58,6 +58,7 @@ export function DocumentEditor({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [finalizing, setFinalizing] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const [confirmFinalize, setConfirmFinalize] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -221,41 +222,89 @@ export function DocumentEditor({
               />
             </div>
           ) : (
-            <div key={li.id} className="line-table-row mono">
-              <span>{li.description}</span>
-              <span>{li.quantity}</span>
-              <span>₹{centsToAmount(li.unitPriceCents).toFixed(2)}</span>
-              <span>
-                {li.discountType === "none"
-                  ? "—"
-                  : li.discountType === "percent"
-                    ? `${basisPointsToFormValue(li.discountValue)}%`
-                    : `₹${centsToAmount(li.discountValue).toFixed(2)}`}
-              </span>
-              <span>
-                {li.taxPercent > 0
-                  ? `${basisPointsToFormValue(li.taxPercent)}%`
-                  : "—"}
-              </span>
-              <span>₹{centsToAmount(li.lineTotalCents).toFixed(2)}</span>
-              <span className="line-row-actions">
-                {isDraft && (
-                  <>
-                    <button
-                      className="link-btn"
-                      onClick={() => setEditingId(li.id)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="link-btn danger"
-                      onClick={() => setConfirmDeleteId(li.id)}
-                    >
-                      Remove
-                    </button>
-                  </>
-                )}
-              </span>
+            <div key={li.id}>
+              <div
+                className="line-table-row mono"
+                onClick={() =>
+                  setExpandedId(expandedId === li.id ? null : li.id)
+                }
+                style={{ cursor: "pointer" }}
+              >
+                <span>{li.description}</span>
+                <span>{li.quantity}</span>
+                <span>₹{centsToAmount(li.unitPriceCents).toFixed(2)}</span>
+                <span>
+                  {li.discountType === "none"
+                    ? "—"
+                    : li.discountType === "percent"
+                      ? `${basisPointsToFormValue(li.discountValue)}%`
+                      : `₹${centsToAmount(li.discountValue).toFixed(2)}`}
+                </span>
+                <span>
+                  {li.taxPercent > 0
+                    ? `${basisPointsToFormValue(li.taxPercent)}%`
+                    : "—"}
+                </span>
+                <span>₹{centsToAmount(li.lineTotalCents).toFixed(2)}</span>
+                <span className="line-row-actions">
+                  {isDraft && (
+                    <>
+                      <button
+                        className="link-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingId(li.id);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="link-btn danger"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setConfirmDeleteId(li.id);
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </>
+                  )}
+                </span>
+              </div>
+              {expandedId === li.id && (
+                <div className="line-breakdown mono">
+                  <div>
+                    <span className="line-breakdown-label">Subtotal</span>
+                    <span>₹{centsToAmount(li.subtotalCents).toFixed(2)}</span>
+                  </div>
+                  <div>
+                    <span className="line-breakdown-label">
+                      Discount amount
+                    </span>
+                    <span>
+                      −₹{centsToAmount(li.discountAmountCents).toFixed(2)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="line-breakdown-label">After discount</span>
+                    <span>
+                      ₹{centsToAmount(li.afterDiscountCents).toFixed(2)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="line-breakdown-label">Tax amount</span>
+                    <span>+₹{centsToAmount(li.taxAmountCents).toFixed(2)}</span>
+                  </div>
+                  <div>
+                    <span className="line-breakdown-label">Line total</span>
+                    <span>
+                      <strong>
+                        ₹{centsToAmount(li.lineTotalCents).toFixed(2)}
+                      </strong>
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           ),
         )}
